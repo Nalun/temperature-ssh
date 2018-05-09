@@ -47,7 +47,7 @@ print maxheat = max(Core)
 if maxheat > 60.0:
     print "Be careful temperature exceeds 60 Degrees"
 elif maxheat > 75.0:
-    print "Be careful temperature exceeds 60 Degrees"
+    print "Be careful temperature exceeds 75 Degrees"
 
 
 client.close()
