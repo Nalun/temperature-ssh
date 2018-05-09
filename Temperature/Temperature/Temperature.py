@@ -7,19 +7,20 @@ pw_file = open("pw.cfg", "r")
 pw = pw_file.readline()
 
 #set order of VM shutdown by ID
-id = ['104','105','103','102','106','100','101']
+idfirst = ['104','105','103']
+idsecond = ['106','100','101','102']
 
 def shutdownvm(vmid):
-    stdin, stdout, stderr = client.exec_command('qm stop'+str(vmid))
+    stdin, stdout, stderr = client.exec_command('qm stop '+str(vmid))
+    print(stdout.read())
+    print(stderr.read())
 
 def filter( start, end, text):
     st = re.search(start, text, re.IGNORECASE).end()+2
     if end == "Core4":
-        #print(text[st:])
         return text[st:]
     else:
         en = re.search(end, text, re.IGNORECASE).start()-1
-        #print(text[st:en])
         return text[st:en]
 
 #connect to Hypervisor and send ssh command
@@ -38,16 +39,23 @@ st = re.search('Core0:', text, re.IGNORECASE).start()
 text = text[st:]
 
 #get temperature for each Core
-Core = []
+Core = ["","","",""]
 for x in range(0, 4):
     Core[x] = filter("Core"+str(x), "Core"+str(x+1), text)
     print(Core[x])
-print maxheat = max(Core)
 
-if maxheat > 60.0:
-    print "Be careful temperature exceeds 60 Degrees"
+#check for heat
+maxheat = float(max(Core))
+print(maxheat)
+
+if maxheat > 40.0:
+    print("Be careful temperature exceeds 60 Degrees")
+    for x in range(0, len(idfirst)):
+        shutdownvm(idfirst[x])
 elif maxheat > 75.0:
-    print "Be careful temperature exceeds 75 Degrees"
+    print("Be careful temperature exceeds 75 Degrees")
+    for x in range(0, len(idsecond)):
+        shutdownvm(idsecond[x])
 
 
 client.close()
