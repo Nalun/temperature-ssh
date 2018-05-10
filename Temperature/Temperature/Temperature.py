@@ -25,7 +25,7 @@ def filter(start, end, text):
 #open password file
 pw_file = open("pw.cfg", "r")
 sshpw = pw_file.readline()
-sqlpw = pw_file.readline(2)
+sqlpw = pw_file.readline()
 
 #set order of VM shutdown by ID
 idfirst = ['104','105','103']
@@ -54,7 +54,7 @@ for x in range(0, 4):
     print(Core[x])
 
 #create connection to SQL server
-sqlconnection = pypyodbc.connect('Driver={SQL Server};Server=192.168.2.107;Database=Temperature;uid=postgres;pwd='+str(sqlpw))
+sqlconnection = pypyodbc.connect('Driver={SQL Server};Server=192.168.2.107;Database=Temperature;uid=temperature;pwd='+str(sqlpw))
 
 
 #check for heat
